@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>林晓的写作工具</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>林晓写作</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1a73e8">
+<meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="林晓写作">
@@ -14,118 +14,223 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
-  background: #f5f5f5;
-  color: #222;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans SC", "PingFang SC", sans-serif;
+  background: #fff;
+  color: #1a1a1a;
   display: flex;
   flex-direction: column;
-  height: 100vh;
   height: 100dvh;
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ===== Top Bar ===== */
 .top-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
+  gap: 0;
+  padding: 0 16px;
+  height: 52px;
   background: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #eee;
   flex-shrink: 0;
 }
-.top-bar .project-name {
-  font-size: 16px;
-  font-weight: 600;
+.top-bar .back-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  min-width: 0;
 }
-.top-bar .project-name:hover { background: #f0f0f0; }
-.top-bar .project-name input {
-  font: inherit;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 2px 6px;
-  width: 100%;
-  outline: none;
-}
-.btn {
-  padding: 6px 14px;
-  border: 1px solid #d0d0d0;
-  background: #fff;
-  border-radius: 6px;
+.menu-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: none;
   cursor: pointer;
-  font-size: 13px;
-  color: #333;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 8px;
   transition: background .15s;
 }
-.btn:hover { background: #e8e8e8; }
-.btn:active { background: #ddd; }
+.menu-btn:hover { background: #f0f0f0; }
+.menu-btn:active { background: #e5e5e5; }
+.menu-btn svg { width: 20px; height: 20px; stroke: #333; stroke-width: 2; fill: none; stroke-linecap: round; }
+
+.project-title-area {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.project-title-area .title-text {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+.project-title-area .title-text:hover { background: #f0f0f0; }
+.project-title-area .title-text input {
+  font: inherit;
+  font-weight: 600;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 2px 6px;
+  width: 180px;
+  outline: none;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  transition: all .15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover { background: #f5f5f5; border-color: #ccc; }
+.btn:active { background: #ebebeb; transform: scale(.97); }
 .btn-primary {
-  background: #1a73e8;
+  background: #1a1a1a;
   color: #fff;
-  border-color: #1a73e8;
+  border-color: #1a1a1a;
 }
-.btn-primary:hover { background: #1565c0; }
-.btn-primary:active { background: #0d47a1; }
-.btn-danger {
-  color: #d32f2f;
-  border-color: #d32f2f;
+.btn-primary:hover { background: #333; border-color: #333; }
+.btn-primary:active { background: #444; }
+.btn-primary:disabled { background: #aaa; border-color: #aaa; cursor: not-allowed; transform: none; }
+.btn-sm { height: 30px; padding: 0 12px; font-size: 13px; }
+.btn-icon-only {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 }
+.btn-icon-only:hover { background: #f5f5f5; }
+.btn-icon-only:active { background: #ebebeb; transform: scale(.95); }
+.btn-icon-only:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+.btn-icon-only svg { width: 18px; height: 18px; stroke: #555; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-icon-only.active { background: #f0f0f0; }
+.btn-danger { color: #d32f2f; border-color: #ffcdd2; }
 .btn-danger:hover { background: #ffebee; }
-.btn-sm { padding: 4px 10px; font-size: 12px; }
-.btn-icon { padding: 4px 8px; font-size: 14px; background: none; border: none; cursor: pointer; }
-.btn-icon:hover { background: #f0f0f0; border-radius: 4px; }
 
 /* ===== Project Sidebar ===== */
+.project-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,.3);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+.project-overlay.open { opacity: 1; pointer-events: auto; }
 .project-panel {
   position: fixed;
   top: 0; left: -320px;
   width: 300px;
+  max-width: 80vw;
   height: 100%;
   background: #fff;
-  border-right: 1px solid #e0e0e0;
-  box-shadow: 2px 0 12px rgba(0,0,0,.08);
-  transition: left .25s;
+  border-right: 1px solid #eee;
+  box-shadow: 4px 0 24px rgba(0,0,0,.1);
+  transition: left .25s cubic-bezier(.4,0,.2,1);
   z-index: 100;
   display: flex;
   flex-direction: column;
 }
 .project-panel.open { left: 0; }
-.project-panel .panel-header {
-  padding: 14px 16px;
-  border-bottom: 1px solid #eee;
+.panel-header {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 56px;
 }
-.project-panel .panel-header h3 { font-size: 15px; }
+.panel-header h3 { font-size: 16px; font-weight: 600; color: #1a1a1a; }
 .project-list { flex: 1; overflow-y: auto; padding: 8px 0; }
 .project-item {
   padding: 12px 16px;
   cursor: pointer;
   border-left: 3px solid transparent;
   transition: background .1s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.project-item:hover { background: #f5f5f5; }
-.project-item.active {
-  background: #e8f0fe;
-  border-left-color: #1a73e8;
+.project-item:hover { background: #f7f7f7; }
+.project-item.active { background: #f0f0f0; border-left-color: #1a1a1a; }
+.project-item .p-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #555;
+  flex-shrink: 0;
 }
-.project-item .p-name { font-size: 14px; font-weight: 500; }
-.project-item .p-info { font-size: 12px; color: #888; margin-top: 2px; }
-.project-item .p-count { font-size: 11px; color: #aaa; }
+.project-item .p-body { flex: 1; min-width: 0; }
+.project-item .p-name { font-size: 14px; font-weight: 500; color: #1a1a1a; }
+.project-item .p-meta { font-size: 12px; color: #999; margin-top: 2px; }
+.project-item .p-del {
+  width: 28px; height: 28px;
+  border: none; background: none;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .15s;
+  flex-shrink: 0;
+}
+.project-item:hover .p-del { opacity: 1; }
+.project-item .p-del:hover { background: #fee; }
 
-/* ===== Settings Dialog ===== */
+/* ===== Dialogs ===== */
 .overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,.35);
+  background: rgba(0,0,0,.3);
   z-index: 200;
   display: flex;
   align-items: center;
@@ -137,49 +242,53 @@ body {
 .overlay.open { opacity: 1; pointer-events: auto; }
 .dialog {
   background: #fff;
-  border-radius: 12px;
-  width: 480px;
-  max-width: 92vw;
+  border-radius: 16px;
+  width: 420px;
+  max-width: 90vw;
   max-height: 80vh;
   overflow-y: auto;
   padding: 24px;
-  box-shadow: 0 8px 30px rgba(0,0,0,.15);
+  box-shadow: 0 12px 40px rgba(0,0,0,.15);
 }
-.dialog h3 { font-size: 17px; margin-bottom: 16px; }
-.dialog .field { margin-bottom: 14px; }
+.dialog h3 { font-size: 17px; font-weight: 600; margin-bottom: 20px; color: #1a1a1a; }
+.dialog .field { margin-bottom: 16px; }
 .dialog label {
   display: block;
   font-size: 13px;
   font-weight: 500;
-  color: #555;
-  margin-bottom: 4px;
+  color: #666;
+  margin-bottom: 6px;
 }
 .dialog input, .dialog textarea, .dialog select {
   width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   font-size: 14px;
   font-family: inherit;
   outline: none;
+  transition: border-color .15s;
+  background: #fafafa;
 }
-.dialog input:focus, .dialog textarea:focus { border-color: #1a73e8; }
-.dialog textarea { resize: vertical; min-height: 60px; }
+.dialog input:focus, .dialog textarea:focus { border-color: #1a1a1a; background: #fff; }
+.dialog textarea { resize: vertical; min-height: 64px; }
 .dialog .btn-row {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   justify-content: flex-end;
-  margin-top: 16px;
+  margin-top: 20px;
 }
+.dialog .btn-row .btn { min-width: 80px; }
 
 /* ===== Main Chat Area ===== */
 .chat-area {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 20px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  -webkit-overflow-scrolling: touch;
 }
 .chat-area:empty::after {
   content: '创建项目后，输入剧情开始写作';
@@ -187,149 +296,159 @@ body {
   text-align: center;
   color: #bbb;
   font-size: 15px;
-  margin-top: 40px;
+  margin-top: 60px;
 }
 
 /* ===== Message Blocks ===== */
 .msg-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 .msg-plot {
   align-self: flex-end;
-  max-width: 70%;
-  background: #e8f0fe;
-  padding: 10px 14px;
-  border-radius: 12px 12px 4px 12px;
+  max-width: 75%;
+  background: #f0f0f0;
+  padding: 12px 16px;
+  border-radius: 16px 16px 4px 16px;
   font-size: 14px;
   line-height: 1.6;
-  color: #1a3a6b;
-  position: relative;
+  color: #1a1a1a;
 }
 .msg-plot .label {
   font-size: 11px;
-  color: #5a7ab5;
+  color: #888;
   font-weight: 500;
   margin-bottom: 4px;
+  letter-spacing: .5px;
 }
 .msg-novel {
   align-self: flex-start;
-  max-width: 90%;
+  max-width: 92%;
   width: 100%;
-  background: #fff;
-  padding: 14px 16px;
-  border-radius: 12px 12px 12px 4px;
+  background: #fafafa;
+  padding: 16px 20px;
+  border-radius: 16px 16px 16px 4px;
   font-size: 15px;
   line-height: 1.9;
-  color: #222;
-  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  color: #1a1a1a;
   white-space: pre-wrap;
   word-wrap: break-word;
+  border: 1px solid #f0f0f0;
 }
 .msg-novel .label {
   font-size: 11px;
-  color: #999;
+  color: #aaa;
   font-weight: 500;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  letter-spacing: .5px;
 }
 .msg-novel .locked-badge {
   display: inline-block;
   font-size: 11px;
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 2px 8px;
+  background: #f0f0f0;
+  color: #888;
+  padding: 2px 10px;
   border-radius: 10px;
-  margin-left: 8px;
+  margin-left: 6px;
+  font-weight: 400;
 }
 .msg-actions {
   align-self: flex-start;
   display: flex;
   gap: 6px;
-  margin-top: 2px;
+  margin-top: 4px;
   padding-left: 4px;
 }
 .msg-actions button {
+  height: 28px;
+  padding: 0 10px;
   font-size: 12px;
-  color: #666;
-  background: none;
-  border: none;
+  color: #555;
+  background: #f5f5f5;
+  border: 1px solid #eee;
+  border-radius: 6px;
   cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: inherit;
+  transition: all .12s;
 }
-.msg-actions button:hover { background: #f0f0f0; color: #333; }
-.msg-actions button.locked { color: #2e7d32; cursor: default; }
-.msg-actions button.locked:hover { background: none; }
+.msg-actions button:hover { background: #ebebeb; color: #333; }
+.msg-actions button:active { transform: scale(.95); }
+.msg-actions button.locked { color: #999; background: #f5f5f5; cursor: default; border-color: #f0f0f0; }
 
-/* ===== Loading Indicator ===== */
+/* ===== Loading ===== */
 .loading-msg {
   align-self: flex-start;
-  background: #fff;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: 16px 20px;
   font-size: 14px;
   color: #888;
-  box-shadow: 0 1px 4px rgba(0,0,0,.06);
 }
 .loading-msg .spinner {
   display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid #ddd;
-  border-top-color: #1a73e8;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #1a1a1a;
   border-radius: 50%;
   animation: spin .6s linear infinite;
-  margin-right: 8px;
+  margin-right: 10px;
   vertical-align: middle;
 }
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ===== Bottom Input ===== */
 .input-bar {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
+  gap: 10px;
   padding: 12px 16px;
   padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   background: #fff;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #eee;
   flex-shrink: 0;
 }
 .input-bar textarea {
   flex: 1;
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 15px;
   font-family: inherit;
   line-height: 1.5;
   resize: none;
   outline: none;
-  min-height: 42px;
-  max-height: 120px;
+  min-height: 48px;
+  max-height: 150px;
+  transition: border-color .15s;
+  background: #fafafa;
 }
-.input-bar textarea:focus { border-color: #1a73e8; }
+.input-bar textarea:focus { border-color: #1a1a1a; background: #fff; }
 .input-bar .input-actions {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
+  flex-shrink: 0;
 }
+.input-bar .input-actions .btn { height: 44px; padding: 0 24px; font-size: 15px; font-weight: 500; border-radius: 12px; }
 
 /* ===== Scrollbar ===== */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #aaa; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #ccc; }
 
 /* ===== Responsive ===== */
-@media (max-width: 600px) {
-  .chat-area { padding: 12px; }
-  .msg-novel { font-size: 14px; }
-  .dialog { width: 95vw; padding: 16px; }
+@media (max-width: 480px) {
+  .chat-area { padding: 16px; gap: 20px; }
+  .msg-novel { font-size: 15px; padding: 14px 16px; }
+  .top-bar { padding: 0 12px; }
+  .input-bar { padding: 10px 12px; }
+  .input-bar .input-actions .btn { padding: 0 18px; }
   .project-panel { width: 280px; left: -300px; }
+  .dialog { padding: 20px; }
 }
 </style>
 </head>
@@ -337,11 +456,23 @@ body {
 
 <!-- Top Bar -->
 <div class="top-bar">
-  <button class="btn-icon" id="menuBtn" title="项目列表">☰</button>
-  <div class="project-name" id="projectTitle" onclick="editProjectName()">未选择项目</div>
-  <button class="btn btn-sm" onclick="openApiKeyDialog()" title="API Key">🔑</button>
-  <button class="btn btn-sm" id="settingsBtn" onclick="openSettings()">设定</button>
-  <button class="btn btn-sm" id="newProjectBtn" onclick="openNewProject()">+ 新项目</button>
+  <div class="back-area">
+    <button class="menu-btn" id="menuBtn" aria-label="项目列表">
+      <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+    </button>
+    <div class="project-title-area">
+      <span class="title-text" id="projectTitle">未选择项目</span>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="btn-icon-only" id="apiKeyBtn" title="API Key 设置">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+    </button>
+    <button class="btn-icon-only" id="settingsBtn" title="女主设定">
+      <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </button>
+    <button class="btn btn-sm" id="newProjectBtn" onclick="openNewProject()">+ 新项目</button>
+  </div>
 </div>
 
 <!-- Main Chat Area -->
@@ -349,18 +480,23 @@ body {
 
 <!-- Input Bar -->
 <div class="input-bar">
-  <textarea id="inputText" rows="1" placeholder="输入剧情…（如：我在酒吧遇到了一个男人）" onkeydown="onInputKeydown(event)"></textarea>
+  <textarea id="inputText" rows="1" placeholder="输入剧情..." onkeydown="onInputKeydown(event)"></textarea>
   <div class="input-actions">
-    <button class="btn btn-icon" id="undoBtn" onclick="undoLast()" title="撤回上一段" disabled>↩</button>
+    <button class="btn-icon-only" id="undoBtn" onclick="undoLast()" disabled>
+      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+    </button>
     <button class="btn btn-primary" id="generateBtn" onclick="generate()">生成</button>
   </div>
 </div>
 
 <!-- Project Panel -->
+<div class="project-overlay" id="projectOverlay" onclick="closeProjectPanel()"></div>
 <div class="project-panel" id="projectPanel">
   <div class="panel-header">
     <h3>项目列表</h3>
-    <button class="btn-icon" onclick="toggleProjectPanel()">✕</button>
+    <button class="btn-icon-only" onclick="closeProjectPanel()" style="border:none;">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </div>
   <div class="project-list" id="projectList"></div>
 </div>
@@ -375,10 +511,10 @@ body {
     </div>
     <div class="field">
       <label>特殊体质 / 全书设定</label>
-      <textarea id="setConstitution" rows="4" placeholder="如：天生媚骨、敏感体质、灵力炉鼎……"></textarea>
+      <textarea id="setConstitution" rows="4" placeholder="如：天生媚骨、敏感体质、灵力炉鼎..."></textarea>
     </div>
     <div class="field">
-      <label>记忆保留字数（衔接用）</label>
+      <label>记忆保留字数（用于段落衔接）</label>
       <input type="number" id="setRetentionChars" value="2000" min="200" max="5000">
     </div>
     <div class="btn-row">
@@ -402,7 +538,7 @@ body {
     </div>
     <div class="field">
       <label>特殊体质 / 全书设定</label>
-      <textarea id="newConstitution" rows="4" placeholder="如：天生媚骨、敏感体质、灵力炉鼎……"></textarea>
+      <textarea id="newConstitution" rows="4" placeholder="如：天生媚骨、敏感体质、灵力炉鼎..."></textarea>
     </div>
     <div class="btn-row">
       <button class="btn" onclick="closeNewProject()">取消</button>
@@ -415,10 +551,10 @@ body {
 <div class="overlay" id="apiKeyOverlay">
   <div class="dialog">
     <h3>API Key 设置</h3>
-    <p style="font-size:13px;color:#666;margin-bottom:12px;">输入你的 DeepSeek API Key，仅保存在本地浏览器中。</p>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;line-height:1.6;">输入你的 DeepSeek API Key，仅保存在本地浏览器中。</p>
     <div class="field">
       <label>DeepSeek API Key</label>
-      <input type="password" id="apiKeyInput" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="font-family:monospace;">
+      <input type="password" id="apiKeyInput" placeholder="sk-..." style="font-family:monospace;">
     </div>
     <div class="btn-row">
       <button class="btn" id="apiKeyCancelBtn" onclick="closeApiKeyDialog()">取消</button>
@@ -440,14 +576,14 @@ const CONFIG = {
 };
 
 // ========================================================
-//  System Prompt (文风提示词)
+//  System Prompt
 // ========================================================
 function buildSystemPrompt(project) {
-  const heroineName = project.heroineName || '林晓';
+  const heroineName = project.heroineName || '\u6797\u6653';
   const constitution = project.specialConstitution || '';
   const memory = project.memory || { compressedSummary: '', lastSegmentTail: '' };
 
-  let prompt = `你是一个H小说写作助手，以第一人称（"我"）视角创作女性向成人小说。
+  let prompt = `\u4F60\u662F\u4E00\u4E2AH\u5C0F\u8BF4\u5199\u4F5C\u52A9\u624B\uFF0C\u4EE5\u7B2C\u4E00\u4EBA\u79F0\uFF08\u201C\u6211\u201D\uFF09\u89C6\u89D2\u521B\u4F5C\u5973\u6027\u5411\u6210\u4EBA\u5C0F\u8BF4\u3002
 
 【核心设定】
 - 视角：纯第一人称（"我"），女主视角
@@ -498,7 +634,6 @@ function buildSystemPrompt(project) {
 - 世界的内部逻辑是唯一的创作标准
 `;
 
-  // Memory context
   if (memory.compressedSummary) {
     prompt += `\n【历史剧情概要】\n${memory.compressedSummary}\n`;
   }
@@ -540,7 +675,6 @@ function openDB() {
   });
 }
 
-// Setting helpers (key-value store)
 async function dbGetSetting(key) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -635,13 +769,27 @@ let state = {
 // ========================================================
 function $(id) { return document.getElementById(id); }
 
+function closeProjectPanel() {
+  $('projectPanel').classList.remove('open');
+  $('projectOverlay').classList.remove('open');
+}
+
 function toggleProjectPanel() {
-  $('projectPanel').classList.toggle('open');
+  const panel = $('projectPanel');
+  const overlay = $('projectOverlay');
+  const isOpen = panel.classList.contains('open');
+  if (isOpen) {
+    closeProjectPanel();
+  } else {
+    panel.classList.add('open');
+    overlay.classList.add('open');
+    refreshProjectList();
+  }
 }
 
 function openNewProject() {
   $('newProjectName').value = '';
-  $('newHeroineName').value = '林晓';
+  $('newHeroineName').value = '\u6797\u6653';
   $('newConstitution').value = '';
   $('newProjectOverlay').classList.add('open');
   setTimeout(() => $('newProjectName').focus(), 100);
@@ -651,7 +799,6 @@ function closeNewProject() {
   $('newProjectOverlay').classList.remove('open');
 }
 
-// API Key Dialog
 function openApiKeyDialog() {
   dbGetSetting('apiKey').then(key => {
     $('apiKeyInput').value = key || '';
@@ -666,19 +813,19 @@ function closeApiKeyDialog() {
 
 async function saveApiKey() {
   const key = $('apiKeyInput').value.trim();
-  if (!key) { alert('请输入 API Key'); return; }
-  if (!key.startsWith('sk-')) { alert('API Key 格式不正确，应以 sk- 开头'); return; }
+  if (!key) { alert('\u8BF7\u8F93\u5165 API Key'); return; }
+  if (!key.startsWith('sk-')) { alert('API Key \u683C\u5F0F\u4E0D\u6B63\u786E\uFF0C\u5E94\u4EE5 sk- \u5F00\u5934'); return; }
   await dbSetSetting('apiKey', key);
   closeApiKeyDialog();
 }
 
 async function saveNewProject() {
   const name = $('newProjectName').value.trim();
-  if (!name) { alert('请输入项目名称'); return; }
+  if (!name) { alert('\u8BF7\u8F93\u5165\u9879\u76EE\u540D\u79F0'); return; }
   const project = {
     id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
     name,
-    heroineName: $('newHeroineName').value.trim() || '林晓',
+    heroineName: $('newHeroineName').value.trim() || '\u6797\u6653',
     specialConstitution: $('newConstitution').value.trim(),
     createdAt: Date.now(),
     updatedAt: Date.now(),
@@ -695,8 +842,8 @@ async function saveNewProject() {
 }
 
 function openSettings() {
-  if (!state.currentProject) { alert('请先选择项目'); return; }
-  $('setHeroineName').value = state.currentProject.heroineName || '林晓';
+  if (!state.currentProject) { alert('\u8BF7\u5148\u9009\u62E9\u9879\u76EE'); return; }
+  $('setHeroineName').value = state.currentProject.heroineName || '\u6797\u6653';
   $('setConstitution').value = state.currentProject.specialConstitution || '';
   $('setRetentionChars').value = state.currentProject.memory?.retentionChars || CONFIG.defaultRetentionChars;
   $('settingsOverlay').classList.add('open');
@@ -708,7 +855,7 @@ function closeSettings() {
 
 async function saveSettings() {
   if (!state.currentProject) return;
-  state.currentProject.heroineName = $('setHeroineName').value.trim() || '林晓';
+  state.currentProject.heroineName = $('setHeroineName').value.trim() || '\u6797\u6653';
   state.currentProject.specialConstitution = $('setConstitution').value.trim();
   state.currentProject.memory.retentionChars = parseInt($('setRetentionChars').value) || CONFIG.defaultRetentionChars;
   state.currentProject.updatedAt = Date.now();
@@ -744,7 +891,7 @@ function editProjectName() {
 }
 
 function renderProjectTitle() {
-  $('projectTitle').textContent = state.currentProject ? state.currentProject.name : '未选择项目';
+  $('projectTitle').textContent = state.currentProject ? state.currentProject.name : '\u672A\u9009\u62E9\u9879\u76EE';
 }
 
 async function refreshProjectList() {
@@ -757,22 +904,29 @@ async function refreshProjectList() {
     const count = segments ? segments.filter(s => s.content).length : 0;
     const item = document.createElement('div');
     item.className = 'project-item' + (state.currentProject && state.currentProject.id === p.id ? ' active' : '');
+    const initial = p.name.charAt(0);
     item.innerHTML = `
-      <div class="p-name">${p.name}</div>
-      <div class="p-count">${count} 段</div>
+      <div class="p-icon">${initial}</div>
+      <div class="p-body">
+        <div class="p-name">${p.name}</div>
+        <div class="p-meta">${count} 段</div>
+      </div>
+      <button class="p-del" onclick="event.stopPropagation();deleteProjectPrompt('${p.id}')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+      </button>
     `;
     item.onclick = () => {
-      toggleProjectPanel();
+      closeProjectPanel();
       switchProject(p.id);
     };
-    // Right-click to delete
-    item.oncontextmenu = (e) => {
-      e.preventDefault();
-      if (confirm(`删除项目「${p.name}」？所有内容将被清除。`)) {
-        deleteProject(p.id);
-      }
-    };
     list.appendChild(item);
+  }
+}
+
+function deleteProjectPrompt(projectId) {
+  const p = state.projects.find(x => x.id === projectId);
+  if (p && confirm(`删除项目「${p.name}」？所有内容将被清除。`)) {
+    deleteProject(projectId);
   }
 }
 
@@ -814,10 +968,7 @@ async function switchProject(projectId) {
 function renderChat() {
   const area = $('chatArea');
   area.innerHTML = '';
-  if (!state.currentProject) {
-    area.innerHTML = '';
-    return;
-  }
+  if (!state.currentProject) return;
   for (const seg of state.segments) {
     appendSegmentToDOM(seg, false);
   }
@@ -829,31 +980,28 @@ function appendSegmentToDOM(seg, scroll = true) {
   group.className = 'msg-group';
   group.dataset.segId = seg.id;
 
-  // Plot input
   if (seg.plotInput) {
     const plotMsg = document.createElement('div');
     plotMsg.className = 'msg-plot';
-    plotMsg.innerHTML = `<div class="label">📝 剧情</div>${escapeHtml(seg.plotInput)}`;
+    plotMsg.innerHTML = `<div class="label">剧情</div>${escapeHtml(seg.plotInput)}`;
     group.appendChild(plotMsg);
   }
 
-  // Generated content
   if (seg.content) {
     const novelMsg = document.createElement('div');
     novelMsg.className = 'msg-novel';
-    const badge = seg.isLocked ? '<span class="locked-badge">🔒 已锁定</span>' : '';
-    novelMsg.innerHTML = `<div class="label">📖 正文 ${badge}</div>${escapeHtml(seg.content)}`;
+    const badge = seg.isLocked ? '<span class="locked-badge">已锁定</span>' : '';
+    novelMsg.innerHTML = `<div class="label">正文 ${badge}</div>${escapeHtml(seg.content)}`;
     group.appendChild(novelMsg);
 
-    // Action buttons
     const actions = document.createElement('div');
     actions.className = 'msg-actions';
     if (seg.isLocked) {
-      actions.innerHTML = '<button class="locked">🔒 已锁定</button>';
+      actions.innerHTML = '<button class="locked">已锁定</button>';
     } else {
       actions.innerHTML = `
-        <button onclick="regenerate('${seg.id}')">↻ 重生成</button>
-        <button onclick="toggleLock('${seg.id}')">🔒 锁定</button>
+        <button onclick="regenerate('${seg.id}')">重新生成</button>
+        <button onclick="toggleLock('${seg.id}')">锁定</button>
       `;
     }
     group.appendChild(actions);
@@ -882,23 +1030,21 @@ function onInputKeydown(e) {
     e.preventDefault();
     generate();
   }
-  // Auto-resize
   const el = e.target;
   el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  el.style.height = Math.min(el.scrollHeight, 150) + 'px';
 }
 
 async function generate() {
   const input = $('inputText');
   const plot = input.value.trim();
-  if (!plot) { alert('请输入剧情'); return; }
-  if (!state.currentProject) { alert('请先创建或选择一个项目'); return; }
+  if (!plot) { alert('\u8BF7\u8F93\u5165\u5267\u60C5'); return; }
+  if (!state.currentProject) { alert('\u8BF7\u5148\u521B\u5EFA\u6216\u9009\u62E9\u4E00\u4E2A\u9879\u76EE'); return; }
   if (state.isGenerating) return;
 
   input.value = '';
   input.style.height = 'auto';
 
-  // Create a placeholder segment
   const segId = 'seg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
   const seg = {
     id: segId,
@@ -912,72 +1058,63 @@ async function generate() {
   state.segments.push(seg);
   await dbPut('segments', seg);
 
-  // Show plot message
   const area = $('chatArea');
   const group = document.createElement('div');
   group.className = 'msg-group';
   group.dataset.segId = segId;
   const plotMsg = document.createElement('div');
   plotMsg.className = 'msg-plot';
-  plotMsg.innerHTML = `<div class="label">📝 剧情</div>${escapeHtml(plot)}`;
+  plotMsg.innerHTML = `<div class="label">剧情</div>${escapeHtml(plot)}`;
   group.appendChild(plotMsg);
 
-  // Loading indicator
   const loadingMsg = document.createElement('div');
   loadingMsg.className = 'loading-msg';
   loadingMsg.id = 'loading_' + segId;
-  loadingMsg.innerHTML = '<span class="spinner"></span>写作中…';
+  loadingMsg.innerHTML = '<span class="spinner"></span>写作中...';
   group.appendChild(loadingMsg);
 
   area.appendChild(group);
   scrollToBottom();
   updateUndoBtn();
 
-  // Call API
   state.isGenerating = true;
-  $('generateBtn').textContent = '生成中…';
+  $('generateBtn').textContent = '写作中';
   $('generateBtn').disabled = true;
   $('inputText').disabled = true;
 
   try {
     const content = await callDeepSeek(plot);
 
-    // Update segment
     seg.content = content;
     await dbPut('segments', seg);
 
-    // Remove loading, render result
     const loadingEl = document.getElementById('loading_' + segId);
     if (loadingEl) loadingEl.remove();
 
-    // Build the novel message
     const groupEl = document.querySelector(`[data-seg-id="${segId}"]`);
     if (groupEl) {
       const novelMsg = document.createElement('div');
       novelMsg.className = 'msg-novel';
-      novelMsg.innerHTML = `<div class="label">📖 正文</div>${escapeHtml(content)}`;
+      novelMsg.innerHTML = `<div class="label">正文</div>${escapeHtml(content)}`;
       groupEl.appendChild(novelMsg);
 
       const actions = document.createElement('div');
       actions.className = 'msg-actions';
       actions.innerHTML = `
-        <button onclick="regenerate('${segId}')">↻ 重生成</button>
-        <button onclick="toggleLock('${segId}')">🔒 锁定</button>
+        <button onclick="regenerate('${segId}')">重新生成</button>
+        <button onclick="toggleLock('${segId}')">锁定</button>
       `;
       groupEl.appendChild(actions);
     }
 
-    // Update memory
     await updateMemory(seg);
     scrollToBottom();
 
   } catch (err) {
     const loadingEl = document.getElementById('loading_' + segId);
     if (loadingEl) {
-      loadingEl.textContent = '❌ 生成失败：' + err.message;
-      loadingEl.style.color = '#d32f2f';
+      loadingEl.textContent = '生成失败：' + err.message;
     }
-    // Still save the failed attempt
     seg.content = '';
     await dbPut('segments', seg);
   } finally {
@@ -994,11 +1131,10 @@ async function callDeepSeek(plot) {
   const project = state.currentProject;
   const sysPrompt = buildSystemPrompt(project);
 
-  // Read API key from settings, prompt if missing
   let apiKey = await dbGetSetting('apiKey');
   if (!apiKey) {
     openApiKeyDialog();
-    throw new Error('请先输入 API Key');
+    throw new Error('\u8BF7\u5148\u8F93\u5165 API Key');
   }
 
   const controller = new AbortController();
@@ -1034,7 +1170,7 @@ async function callDeepSeek(plot) {
 
   const data = await response.json();
   const content = data.choices?.[0]?.message?.content || '';
-  if (!content) throw new Error('API 返回内容为空');
+  if (!content) throw new Error('API \u8FD4\u56DE\u5185\u5BB9\u4E3A\u7A7A');
   return content;
 }
 
@@ -1046,19 +1182,15 @@ async function updateMemory(seg) {
   const project = state.currentProject;
   const memory = project.memory;
 
-  // Update compressed summary - keep it simple: just track recent剧情 for now
-  // In a more advanced version, we could call AI to compress
   const allSegments = await dbGetByIndex('segments', 'projectId', project.id);
   allSegments.sort((a, b) => a.order - b.order);
-  
-  // Build a lightweight summary: last 5 plot inputs
+
   const recentPlots = allSegments
     .filter(s => s.plotInput)
     .slice(-5)
     .map(s => s.plotInput);
-  memory.compressedSummary = '近期剧情：' + recentPlots.join(' → ');
+  memory.compressedSummary = '\u8FD1\u671F\u5267\u60C5\uFF1A' + recentPlots.join(' → ');
 
-  // Keep last N chars of the latest segment with content
   const contentSegs = allSegments.filter(s => s.content && s.id !== seg.id);
   if (contentSegs.length > 0) {
     const last = contentSegs[contentSegs.length - 1];
@@ -1080,7 +1212,6 @@ function updateUndoBtn() {
     btn.disabled = true;
     return;
   }
-  // Can undo if the last segment is not locked
   const last = state.segments[state.segments.length - 1];
   btn.disabled = !last || last.isLocked || state.isGenerating;
 }
@@ -1090,13 +1221,11 @@ async function undoLast() {
   if (!state.currentProject || state.segments.length === 0) return;
 
   const last = state.segments[state.segments.length - 1];
-  if (last.isLocked) { alert('最后一段已锁定，无法撤回'); return; }
+  if (last.isLocked) { alert('\u6700\u540E\u4E00\u6BB5\u5DF2\u9501\u5B9A\uFF0C\u65E0\u6CD5\u64A4\u56DE'); return; }
 
-  // Remove from DB and state
   await dbDelete('segments', last.id);
   state.segments.pop();
 
-  // Remove from DOM
   const el = document.querySelector(`[data-seg-id="${last.id}"]`);
   if (el) el.remove();
 
@@ -1105,25 +1234,21 @@ async function undoLast() {
 }
 
 async function regenerate(segId) {
-  if (state.isGenerating) { alert('正在生成中，请等待'); return; }
+  if (state.isGenerating) { alert('\u6B63\u5728\u751F\u6210\u4E2D\uFF0C\u8BF7\u7B49\u5F85'); return; }
   const seg = state.segments.find(s => s.id === segId);
   if (!seg || seg.isLocked) return;
   if (!seg.plotInput) return;
 
-  // Remove the old segment from DOM
   const oldEl = document.querySelector(`[data-seg-id="${segId}"]`);
   if (oldEl) oldEl.remove();
 
-  // Remove from segments list if it was the last one
   const idx = state.segments.findIndex(s => s.id === segId);
   if (idx >= 0) state.segments.splice(idx, 1);
   await dbDelete('segments', segId);
 
-  // Re-enter the plot input
   $('inputText').value = seg.plotInput;
   $('inputText').focus();
 
-  // Regenerate
   await generate();
 }
 
@@ -1133,7 +1258,6 @@ async function toggleLock(segId) {
   seg.isLocked = !seg.isLocked;
   await dbPut('segments', seg);
 
-  // Re-render the segment
   const oldEl = document.querySelector(`[data-seg-id="${segId}"]`);
   if (oldEl) oldEl.remove();
   appendSegmentToDOM(seg, true);
@@ -1144,7 +1268,6 @@ async function toggleLock(segId) {
 //  Init
 // ========================================================
 async function init() {
-  // Register Service Worker for PWA
   if ('serviceWorker' in navigator) {
     try {
       await navigator.serviceWorker.register('sw.js');
@@ -1153,19 +1276,16 @@ async function init() {
     }
   }
 
-  // Menu toggle
-  $('menuBtn').onclick = () => {
-    toggleProjectPanel();
-    refreshProjectList();
-  };
+  $('menuBtn').onclick = toggleProjectPanel;
 
-  // Load projects and auto-select last
+  $('apiKeyBtn').onclick = openApiKeyDialog;
+  $('settingsBtn').onclick = openSettings;
+
   await refreshProjectList();
   if (state.projects.length > 0) {
     await switchProject(state.projects[0].id);
   }
 
-  // Keyboard shortcut: Ctrl+Z for undo
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
       if (!state.isGenerating) {
