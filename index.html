@@ -336,6 +336,13 @@ body {
   word-wrap: break-word;
   border: 1px solid #f0f0f0;
 }
+.novel-content {
+}
+.novel-content p {
+  text-indent: 2em;
+  margin: 0 0 0.5em 0;
+  min-height: 1em;
+}
 .msg-novel .label {
   font-size: 11px;
   color: #aaa;
@@ -471,7 +478,9 @@ body {
     <button class="btn-icon-only" id="settingsBtn" title="女主设定">
       <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
     </button>
-    <button class="btn btn-sm" id="newProjectBtn" onclick="openNewProject()">+ 新项目</button>
+    <button class="btn-icon-only" id="newProjectBtn" onclick="openNewProject()" title="新建项目">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
   </div>
 </div>
 
@@ -583,13 +592,13 @@ function buildSystemPrompt(project) {
   const constitution = project.specialConstitution || '';
   const memory = project.memory || { compressedSummary: '', lastSegmentTail: '' };
 
-  let prompt = `\u4F60\u662F\u4E00\u4E2AH\u5C0F\u8BF4\u5199\u4F5C\u52A9\u624B\uFF0C\u4EE5\u7B2C\u4E00\u4EBA\u79F0\uFF08\u201C\u6211\u201D\uFF09\u89C6\u89D2\u521B\u4F5C\u5973\u6027\u5411\u6210\u4EBA\u5C0F\u8BF4\u3002
+  let prompt = `你是一个文本创作助手，以第一人称（"我"）视角创作女性向成人文本内容。
 
 【核心设定】
 - 视角：纯第一人称（"我"），女主视角
 - 女主：${heroineName}
 - 叙述方式：第一人称叙事，心理活动以默念/内心独白方式呈现
-- 目标：创作真实、有沉浸感的女性视角成人小说
+- 目标：创作真实、有沉浸感的女性视角成人叙事文本
 `;
 
   if (constitution) {
@@ -641,7 +650,7 @@ function buildSystemPrompt(project) {
     prompt += `\n【上一段末尾（衔接用）】\n${memory.lastSegmentTail}\n`;
   }
 
-  prompt += `\n请以${heroineName}的第一人称视角，根据用户输入的剧情创作正文。尽可能多地输出文字，不要中途停止。正文须紧接上文内容，保持连贯。`;
+  prompt += `\n请以${heroineName}的第一人称视角，根据用户输入的剧情输出一大段文本内容。尽可能多地输出文字，不要中途停止。须紧接上文内容，保持连贯。`;
 
   return prompt;
 }
@@ -991,7 +1000,7 @@ function appendSegmentToDOM(seg, scroll = true) {
     const novelMsg = document.createElement('div');
     novelMsg.className = 'msg-novel';
     const badge = seg.isLocked ? '<span class="locked-badge">已锁定</span>' : '';
-    novelMsg.innerHTML = `<div class="label">正文 ${badge}</div>${escapeHtml(seg.content)}`;
+    novelMsg.innerHTML = '<div class="label">文本 ' + badge + '</div><div class="novel-content">' + contentToParagraphs(seg.content) + '</div>';
     group.appendChild(novelMsg);
 
     const actions = document.createElement('div');
@@ -1020,6 +1029,16 @@ function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+function contentToParagraphs(text) {
+  if (!text) return '';
+  const blocks = text.split(/\n{2,}/);
+  return blocks.map(block => {
+    if (!block.trim()) return '';
+    const escaped = escapeHtml(block);
+    return '<p>' + escaped.replace(/\n/g, '<br>') + '</p>';
+  }).join('');
 }
 
 // ========================================================
@@ -1062,19 +1081,22 @@ async function generate() {
   const group = document.createElement('div');
   group.className = 'msg-group';
   group.dataset.segId = segId;
+
+  // Plot message
   const plotMsg = document.createElement('div');
   plotMsg.className = 'msg-plot';
   plotMsg.innerHTML = `<div class="label">剧情</div>${escapeHtml(plot)}`;
   group.appendChild(plotMsg);
 
-  const loadingMsg = document.createElement('div');
-  loadingMsg.className = 'loading-msg';
-  loadingMsg.id = 'loading_' + segId;
-  loadingMsg.innerHTML = '<span class="spinner"></span>写作中...';
-  group.appendChild(loadingMsg);
+  // Novel container - empty initially, filled by streaming
+  const novelMsg = document.createElement('div');
+  novelMsg.className = 'msg-novel';
+  novelMsg.id = 'novel_' + segId;
+  novelMsg.innerHTML = '<div class="label">文本</div><div class="novel-content" id="novelContent_' + segId + '"></div>';
+  group.appendChild(novelMsg);
 
   area.appendChild(group);
-  scrollToBottom();
+  // Don't auto-scroll, keep scroll position fixed
   updateUndoBtn();
 
   state.isGenerating = true;
@@ -1082,40 +1104,37 @@ async function generate() {
   $('generateBtn').disabled = true;
   $('inputText').disabled = true;
 
-  try {
-    const content = await callDeepSeek(plot);
+  // Remember scroll position before generation
+  // We don't auto-scroll during streaming, let user stay where they are
 
-    seg.content = content;
+  try {
+    const contentDiv = document.getElementById('novelContent_' + segId);
+
+    await callDeepSeekStream(plot, (chunk) => {
+      seg.content += chunk;
+      contentDiv.innerHTML = contentToParagraphs(seg.content);
+    });
+
+    // Streaming done, save to DB
     await dbPut('segments', seg);
 
-    const loadingEl = document.getElementById('loading_' + segId);
-    if (loadingEl) loadingEl.remove();
-
-    const groupEl = document.querySelector(`[data-seg-id="${segId}"]`);
-    if (groupEl) {
-      const novelMsg = document.createElement('div');
-      novelMsg.className = 'msg-novel';
-      novelMsg.innerHTML = `<div class="label">正文</div>${escapeHtml(content)}`;
-      groupEl.appendChild(novelMsg);
-
-      const actions = document.createElement('div');
-      actions.className = 'msg-actions';
-      actions.innerHTML = `
-        <button onclick="regenerate('${segId}')">重新生成</button>
-        <button onclick="toggleLock('${segId}')">锁定</button>
-      `;
-      groupEl.appendChild(actions);
-    }
+    // Add action buttons
+    const actions = document.createElement('div');
+    actions.className = 'msg-actions';
+    actions.innerHTML = `
+      <button onclick="regenerate('${segId}')">重新生成</button>
+      <button onclick="toggleLock('${segId}')">锁定</button>
+    `;
+    group.appendChild(actions);
 
     await updateMemory(seg);
-    scrollToBottom();
 
   } catch (err) {
-    const loadingEl = document.getElementById('loading_' + segId);
-    if (loadingEl) {
-      loadingEl.textContent = '生成失败：' + err.message;
+    const contentDiv = document.getElementById('novelContent_' + segId);
+    if (contentDiv) {
+      contentDiv.insertAdjacentHTML('beforeend', `<span style="color:#d32f2f;font-size:13px;display:block;margin-top:8px;">生成中断：${err.message}</span>`);
     }
-    seg.content = '';
+    seg.content += '\n\n[生成中断]';
     await dbPut('segments', seg);
   } finally {
     state.isGenerating = false;
@@ -1127,7 +1146,7 @@ async function generate() {
   }
 }
 
-async function callDeepSeek(plot) {
+async function callDeepSeekStream(plot, onChunk) {
   const project = state.currentProject;
   const sysPrompt = buildSystemPrompt(project);
 
@@ -1150,11 +1169,11 @@ async function callDeepSeek(plot) {
       model: CONFIG.model,
       messages: [
         { role: 'system', content: sysPrompt },
-        { role: 'user', content: `【剧情】${plot}\n\n请以${project.heroineName || '林晓'}的第一人称视角写出这段正文，尽可能多写。` }
+        { role: 'user', content: `【剧情】${plot}\n\n请以${project.heroineName || '林晓'}的第一人称视角输出下一大段文本内容，尽可能多写。` }
       ],
       max_tokens: CONFIG.maxTokens,
       temperature: CONFIG.temperature,
-      stream: false
+      stream: true
     }),
     signal: controller.signal
   });
@@ -1168,10 +1187,34 @@ async function callDeepSeek(plot) {
     throw new Error(errMsg);
   }
 
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content || '';
-  if (!content) throw new Error('API \u8FD4\u56DE\u5185\u5BB9\u4E3A\u7A7A');
-  return content;
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || ''; // keep incomplete line in buffer
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed === 'data: [DONE]') continue;
+      if (trimmed.startsWith('data: ')) {
+        try {
+          const json = JSON.parse(trimmed.slice(6));
+          const delta = json.choices?.[0]?.delta?.content;
+          if (delta) {
+            onChunk(delta);
+          }
+        } catch (e) {
+          // skip malformed JSON lines
+        }
+      }
+    }
+  }
 }
 
 // ========================================================
