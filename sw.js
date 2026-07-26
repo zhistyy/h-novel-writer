@@ -1,5 +1,5 @@
 // Service Worker - 离线缓存策略
-const CACHE_NAME = 'linxiao-writer-v1';
+const CACHE_NAME = 'linxiao-writer-v2';
 
 // 需要预缓存的文件
 const PRECACHE_URLS = [

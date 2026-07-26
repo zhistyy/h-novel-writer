@@ -20,6 +20,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -292,6 +293,7 @@ body {
   align-items: flex-end;
   gap: 8px;
   padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   background: #fff;
   border-top: 1px solid #e0e0e0;
   flex-shrink: 0;
@@ -668,11 +670,6 @@ async function saveApiKey() {
   if (!key.startsWith('sk-')) { alert('API Key 格式不正确，应以 sk- 开头'); return; }
   await dbSetSetting('apiKey', key);
   closeApiKeyDialog();
-  // If this was the first-run prompt, re-enable the interface
-  if ($('apiKeyCancelBtn').style.display === 'none') {
-    $('generateBtn').disabled = false;
-    $('inputText').disabled = false;
-  }
 }
 
 async function saveNewProject() {
@@ -997,9 +994,12 @@ async function callDeepSeek(plot) {
   const project = state.currentProject;
   const sysPrompt = buildSystemPrompt(project);
 
-  // Read API key from settings
-  const apiKey = await dbGetSetting('apiKey');
-  if (!apiKey) throw new Error('请先设置 API Key');
+  // Read API key from settings, prompt if missing
+  let apiKey = await dbGetSetting('apiKey');
+  if (!apiKey) {
+    openApiKeyDialog();
+    throw new Error('请先输入 API Key');
+  }
 
   const controller = new AbortController();
   state.generationAbortController = controller;
@@ -1151,18 +1151,6 @@ async function init() {
     } catch (e) {
       console.log('SW registration failed:', e);
     }
-  }
-
-  // Check API Key on first run
-  const apiKey = await dbGetSetting('apiKey');
-  if (!apiKey) {
-    // First run — force API key input, disable other actions
-    $('generateBtn').disabled = true;
-    $('inputText').disabled = true;
-    $('apiKeyInput').value = '';
-    $('apiKeyCancelBtn').style.display = 'none';
-    $('apiKeyOverlay').querySelector('h3').textContent = '首次使用 — 请输入 API Key';
-    $('apiKeyOverlay').classList.add('open');
   }
 
   // Menu toggle
