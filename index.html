@@ -515,6 +515,14 @@ body {
   <div class="dialog">
     <h3>女主设定</h3>
     <div class="field">
+      <label>世界观</label>
+      <select id="setWorldType">
+        <option value="modern">现代</option>
+        <option value="ancient">古风</option>
+        <option value="western">西方奇幻</option>
+      </select>
+    </div>
+    <div class="field">
       <label>女主姓名</label>
       <input type="text" id="setHeroineName" placeholder="林晓">
     </div>
@@ -540,6 +548,14 @@ body {
     <div class="field">
       <label>书名 / 项目名</label>
       <input type="text" id="newProjectName" placeholder="输入项目名称">
+    </div>
+    <div class="field">
+      <label>世界观</label>
+      <select id="newWorldType">
+        <option value="modern">现代</option>
+        <option value="ancient">古风</option>
+        <option value="western">西方奇幻</option>
+      </select>
     </div>
     <div class="field">
       <label>女主姓名</label>
@@ -584,6 +600,30 @@ const CONFIG = {
   defaultRetentionChars: 2000
 };
 
+const WORLD_VOCAB = {
+  modern: {
+    name: '现代',
+    male: '阴茎、肉棒、龟头、囊袋',
+    female: '小穴、骚逼、阴唇、阴蒂、子宫口、蜜壶',
+    fluid: '精液、淫水、爱液、唾液、汗水、白浊',
+    action: '插入、抽插、顶弄、舔舐、吸吮、啃咬、揉捏、掰开、贯穿'
+  },
+  ancient: {
+    name: '古风',
+    male: '玉茎、阳物、肉茎、龟首、囊袋',
+    female: '花穴、玉门、花心、花径、蜜穴、桃源',
+    fluid: '阳精、琼浆、花蜜、香汗、白浊',
+    action: '挺入、抽送、顶弄、舔舐、吸吮、揉捏'
+  },
+  western: {
+    name: '西方奇幻',
+    male: '肉刃、巨物、欲根、冠首',
+    female: '花径、蜜穴、蕊心、幽谷、秘洞',
+    fluid: '精华、蜜液、爱露、白浊',
+    action: '侵入、挺进、搅弄、舔舐、吸吮'
+  }
+};
+
 // ========================================================
 //  System Prompt
 // ========================================================
@@ -591,10 +631,13 @@ function buildSystemPrompt(project) {
   const heroineName = project.heroineName || '\u6797\u6653';
   const constitution = project.specialConstitution || '';
   const memory = project.memory || { compressedSummary: '', lastSegmentTail: '' };
+  const worldType = project.worldType || 'modern';
+  const vocab = WORLD_VOCAB[worldType] || WORLD_VOCAB.modern;
 
   let prompt = `你是肉文/H文写作助手，专注创作女性第一人称视角的成人情色文本。剧情为性服务，重点在于性场面本身。
 
 【核心设定】
+- 世界观：${vocab.name}
 - 视角：纯第一人称（"我"），女主视角
 - 女主：${heroineName}
 - 叙述方式：第一人称叙事，以性场面为核心驱动
@@ -616,11 +659,11 @@ function buildSystemPrompt(project) {
 - 不喜欢内射，高潮前会请求拔出去或戴套（"拔出去……求你了……别射在里面……"）
 
 【性行为增强描写——必须严格遵守】
-必须使用以下直接生理词汇，不得回避或用隐晦词替代：
-- 男性器官：阴茎、肉棒、龟头、囊袋
-- 女性器官：小穴、骚逼、阴唇、阴蒂、子宫口、蜜壶
-- 体液：精液、淫水、爱液、唾液、汗水、白浊
-- 动作：插入、抽插、顶弄、舔舐、吸吮、啃咬、揉捏、掰开、贯穿
+必须使用以下直接词汇，不得回避或用隐晦词替代：
+- 男性器官：${vocab.male}
+- 女性器官：${vocab.female}
+- 体液：${vocab.fluid}
+- 动作：${vocab.action}
 
 性行为过程从浅到深逐步推进：
 1. 前戏：亲吻抚摸舔舐 → 逐步点燃欲望
@@ -834,6 +877,7 @@ async function saveNewProject() {
   const project = {
     id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
     name,
+    worldType: $('newWorldType').value,
     heroineName: $('newHeroineName').value.trim() || '\u6797\u6653',
     specialConstitution: $('newConstitution').value.trim(),
     createdAt: Date.now(),
@@ -852,6 +896,7 @@ async function saveNewProject() {
 
 function openSettings() {
   if (!state.currentProject) { alert('\u8BF7\u5148\u9009\u62E9\u9879\u76EE'); return; }
+  $('setWorldType').value = state.currentProject.worldType || 'modern';
   $('setHeroineName').value = state.currentProject.heroineName || '\u6797\u6653';
   $('setConstitution').value = state.currentProject.specialConstitution || '';
   $('setRetentionChars').value = state.currentProject.memory?.retentionChars || CONFIG.defaultRetentionChars;
@@ -864,6 +909,7 @@ function closeSettings() {
 
 async function saveSettings() {
   if (!state.currentProject) return;
+  state.currentProject.worldType = $('setWorldType').value;
   state.currentProject.heroineName = $('setHeroineName').value.trim() || '\u6797\u6653';
   state.currentProject.specialConstitution = $('setConstitution').value.trim();
   state.currentProject.memory.retentionChars = parseInt($('setRetentionChars').value) || CONFIG.defaultRetentionChars;
